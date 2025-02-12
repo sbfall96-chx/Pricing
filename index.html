@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Agent</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const INTEGRAIL_ENDPOINT = 'https://studio.integrail.ai/api/agents/Pricing_Agent';
+        const INTEGRAIL_API_KEY = 'your_api_key';
+
+        function PricingAgent() {
+            const [productData, setProductData] = React.useState({
+                product_id: '',
+                current_price: '',
+                cost: '',
+                competitor_price: '',
+                inventory_level: '',
+                season: 'spring'
+            });
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                try {
+                    const response = await fetch(INTEGRAIL_ENDPOINT, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${INTEGRAIL_API_KEY}`,
+                            'Access-Control-Allow-Origin': '*',
+                            'Access-Control-Allow-Methods': 'POST',
+                            'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+                        },
+                        body: JSON.stringify({
+                            userPrompt: JSON.stringify(productData)
+                        }),
+                        mode: 'cors',
+                        credentials: 'include'
+                    });
+                    const data = await response.json();
+                    console.log('Response:', data);
+                } catch (error) {
+                    console.error('Error:', error);
